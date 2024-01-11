@@ -8,8 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-////////////////////////////////////////////USUÀRIO
-
 func InsereUsuario(c *gin.Context) {
 	var usuario model.Usuario
 	if err := c.ShouldBindJSON(&usuario); err != nil {
@@ -17,14 +15,12 @@ func InsereUsuario(c *gin.Context) {
 		return
 	}
 
-	// Hash da senha antes de salvar no banco de dados
 	hashedSenha, err := bcrypt.GenerateFromPassword([]byte(usuario.Senha), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Erro ao gerar hash da senha"})
 		return
 	}
 
-	// Substitua a senha pela versão hasheada antes de salvar
 	usuario.Senha = hashedSenha
 
 	result := db.Database.Create(&usuario)

@@ -10,7 +10,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Login realiza a autenticação do usuário e retorna um token JWT válido.
 func Login(c *gin.Context) {
 	var request model.Request
 	if err := c.ShouldBindJSON(&request); err != nil {
