@@ -12,5 +12,4 @@ Este projeto é uma biblioteca virtual com funcionalidades de gestão de livros 
 - **Aprimoramento de Segurança**: Criptografia e validação robusta.
 - **Recuperação de Senha**: Mecanismo para recuperar senhas esquecidas.
 - **Logs e Monitoramento**: Registro de atividades e sistema de monitoramento.
-- **Interface Gráfica (Frontend)**: Desenvolvimento de uma interface amigável.
 - **Documentação em Swagger**: Detalhada documentação Swagger para facilitar o entendimento da API.
