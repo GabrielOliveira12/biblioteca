@@ -7,9 +7,7 @@ Este projeto é uma biblioteca virtual com funcionalidades de gestão de livros 
 - Validação de token para operações restritas.
 
 ## Próximas Melhorias
-
-- **Filtragem de Requisição GET**: Busca de livros vinculados ao ID do usuário.
-- **Aprimoramento de Segurança**: Criptografia e validação robusta.
 - **Recuperação de Senha**: Mecanismo para recuperar senhas esquecidas.
 - **Logs e Monitoramento**: Registro de atividades e sistema de monitoramento.
-- **Documentação em Swagger**: Detalhada documentação Swagger para facilitar o entendimento da API.
+- **Testes unitários**.
+
