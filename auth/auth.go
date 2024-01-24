@@ -1,12 +1,11 @@
 package auth
 
 import (
+	"biblioteca/model"
 	"errors"
 	"net/http"
 	"strings"
 	"time"
-
-	"biblioteca/model"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -14,7 +13,7 @@ import (
 
 var chaveSecreta = []byte("chave_secreta_de_teste_123")
 
-func GenerateJWTToken(user model.Usuario) (string, error) {
+func GenerateJWTToken(user model.User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["id"] = user.ID
@@ -58,7 +57,7 @@ func ExtractTokenFromRequest(req *http.Request) (string, error) {
 	}
 
 	tokenParts := strings.Split(authorizationHeader, " ")
-	if len(tokenParts) != 2 || tokenParts[0] != "Bearer" {
+	if len(tokenParts) != 2 || tokenParts[0] != "t" {
 		return "", errors.New("Formato inválido de token")
 	}
 

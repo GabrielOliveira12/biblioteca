@@ -4,12 +4,23 @@ import (
 	"biblioteca/auth"
 	"biblioteca/db"
 	"biblioteca/model"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Login godoc
+// @Summary Login
+// @Schemes
+// @Param request body model.Request true "Login credentials"
+// @Description Handles user login
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Success 200 {string} Login
+// @Router /requests [post]
 func Login(c *gin.Context) {
 	var request model.Request
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -17,20 +28,20 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	var usuario model.Usuario
-	if err := db.Database.Where("nome = ?", request.Nome).First(&usuario).Error; err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Credenciais inválidas"})
+	var user model.User
+	if err := db.Database.Where("name = ?", request.Name).First(&user).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		return
+	}
+	passwordBytes := []byte(request.Password)
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), passwordBytes); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(usuario.Senha), []byte(request.Senha)); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Credenciais inválidas"})
-		return
-	}
-
-	token, err := auth.GenerateJWTToken(usuario)
+	token, err := auth.GenerateJWTToken(user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao gerar token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating token"})
 		return
 	}
 

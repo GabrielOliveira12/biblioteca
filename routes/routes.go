@@ -1,32 +1,31 @@
 package routes
 
 import (
-	"biblioteca/auth"
 	"biblioteca/controller"
 	"biblioteca/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
-func ApiBiblioteca(r *gin.Engine) {
+func ApiLibrary(r *gin.Engine) {
 
-	openuser := r.Group("usuarios")
-	privatyuser := r.Group("usuarios")
-	admprivatyuser := r.Group("livros")
+	openuser := r.Group("users")
+	privatyuser := r.Group("users")
+	admprivatyuser := r.Group("books")
 
 	openuser.Use(middleware.OpenUserMiddleware())
 	privatyuser.Use(middleware.PrivatyUserMiddleware())
-	admprivatyuser.Use(auth.TokenAuthMiddleware())
+	admprivatyuser.Use(middleware.AdmPrivatyUserMiddleware())
 
-	openuser.POST("", controller.InsereUsuario)
-	privatyuser.GET("", controller.ListaUsuario)
-	privatyuser.PUT("/:id", controller.EditaUsuario)
-	privatyuser.DELETE("/:id", controller.DeletaUsuario)
+	openuser.POST("", controller.InsertUser)
+	privatyuser.GET("", controller.ListUser)
+	privatyuser.PUT("/:id", controller.UpdateUser)
+	privatyuser.DELETE("/:id", controller.DeleteUser)
 
-	admprivatyuser.POST("", controller.InsereLivro)
-	admprivatyuser.GET("", controller.ListaLivro)
-	admprivatyuser.PUT("/:id", controller.EditarLivro)
-	admprivatyuser.DELETE("/:id", controller.DeletaLivro)
+	admprivatyuser.POST("", controller.InsertBook)
+	admprivatyuser.GET("", controller.ListBook)
+	admprivatyuser.PUT("/:id", controller.UpdateBook)
+	admprivatyuser.DELETE("/:id", controller.DeleteBook)
 
 	r.POST("/requests", controller.Login)
 

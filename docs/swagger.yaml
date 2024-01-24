@@ -1,0 +1,264 @@
+definitions:
+  model.Book:
+    properties:
+      author:
+        type: string
+      gender:
+        type: string
+      name:
+        type: string
+      photo:
+        type: string
+      pubcompany:
+        type: string
+      user_id:
+        type: integer
+      yearpublication:
+        type: string
+    type: object
+  model.Request:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - name
+    - password
+    type: object
+  model.User:
+    properties:
+      age:
+        type: integer
+      books:
+        items:
+          $ref: '#/definitions/model.Book'
+        type: array
+      lastname:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Library
+  title: Library
+  version: 1.0.0
+paths:
+  /books:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+      security:
+      - JWT: []
+      summary: List Books
+      tags:
+      - Books
+    post:
+      consumes:
+      - application/json
+      description: Insert Books
+      parameters:
+      - description: Book structure
+        in: body
+        name: Books
+        required: true
+        schema:
+          $ref: '#/definitions/model.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+      security:
+      - JWT: []
+      summary: Insert Book
+      tags:
+      - Books
+  /books/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Books
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+      security:
+      - JWT: []
+      summary: Delete Book
+      tags:
+      - Books
+    put:
+      consumes:
+      - application/json
+      description: Update Books
+      parameters:
+      - description: Book structure
+        in: body
+        name: Books
+        required: true
+        schema:
+          $ref: '#/definitions/model.Book'
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+      security:
+      - JWT: []
+      summary: Update Book
+      tags:
+      - Books
+  /requests:
+    post:
+      consumes:
+      - application/json
+      description: Handles user login
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - Authentication
+  /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Users
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+      security:
+      - JWT: []
+      summary: Delete User
+      tags:
+      - Users
+  /users:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+      security:
+      - JWT: []
+      summary: List User
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Insert Users
+      parameters:
+      - description: User structure
+        in: body
+        name: Users
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+      security:
+      - JWT: []
+      summary: Insert User
+      tags:
+      - Users
+  /users/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update Users
+      parameters:
+      - description: Book structure
+        in: body
+        name: Books
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+      security:
+      - JWT: []
+      summary: Update User
+      tags:
+      - Users
+securityDefinitions:
+  JWT:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

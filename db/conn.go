@@ -14,7 +14,7 @@ var Database *gorm.DB
 
 func Connect() {
 
-	dsn := "user=gabriel password=123 dbname=biblioteca host=localhost port=5432 sslmode=disable TimeZone=UTC"
+	dsn := "user=gabriel password=123 dbname=library host=localhost port=5432 sslmode=disable TimeZone=UTC"
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.New(
@@ -31,5 +31,5 @@ func Connect() {
 
 	Database = db
 
-	Database.AutoMigrate(&model.Livro{}, &model.Usuario{})
+	Database.AutoMigrate(&model.User{}, &model.Book{})
 }
