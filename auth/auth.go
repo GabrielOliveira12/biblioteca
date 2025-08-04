@@ -4,6 +4,8 @@ import (
 	"biblioteca/model"
 	"errors"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -11,16 +13,42 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var chaveSecreta = []byte("chave_secreta_de_teste_123")
+func getJWTSecret() []byte {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = "default_secret_key"
+	}
+	return []byte(secret)
+}
+
+func getJWTExpiryHours() time.Duration {
+	hours := os.Getenv("JWT_EXPIRY_HOURS")
+	if hours == "" {
+		return time.Hour * 24
+	}
+	h, err := strconv.Atoi(hours)
+	if err != nil {
+		return time.Hour * 24
+	}
+	return time.Hour * time.Duration(h)
+}
+
+func getTokenPrefix() string {
+	prefix := os.Getenv("JWT_TOKEN_PREFIX")
+	if prefix == "" {
+		return "Bearer"
+	}
+	return prefix
+}
 
 func GenerateJWTToken(user model.User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["id"] = user.ID
 	claims["role"] = user.UserRole
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	claims["exp"] = time.Now().Add(getJWTExpiryHours()).Unix()
 
-	tokenString, err := token.SignedString(chaveSecreta)
+	tokenString, err := token.SignedString(getJWTSecret())
 	if err != nil {
 		return "", err
 	}
@@ -57,7 +85,7 @@ func ExtractTokenFromRequest(req *http.Request) (string, error) {
 	}
 
 	tokenParts := strings.Split(authorizationHeader, " ")
-	if len(tokenParts) != 2 || tokenParts[0] != "t" {
+	if len(tokenParts) != 2 || tokenParts[0] != getTokenPrefix() {
 		return "", errors.New("Formato inválido de token")
 	}
 
@@ -71,7 +99,7 @@ func ValidateToken(tokenString string) (jwt.MapClaims, error) {
 			return nil, errors.New("Método de assinatura inválido")
 		}
 
-		return chaveSecreta, nil
+		return getJWTSecret(), nil
 	})
 
 	if err != nil {

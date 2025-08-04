@@ -2,6 +2,7 @@ package db
 
 import (
 	"biblioteca/model"
+	"fmt"
 	"log"
 	"os"
 
@@ -13,8 +14,43 @@ import (
 var Database *gorm.DB
 
 func Connect() {
+	user := os.Getenv("DB_USER")
+	if user == "" {
+		user = "postgres"
+	}
 
-	dsn := "user=gabriel password=123 dbname=library host=localhost port=5432 sslmode=disable TimeZone=UTC"
+	password := os.Getenv("DB_PASSWORD")
+	if password == "" {
+		password = "password"
+	}
+
+	dbname := os.Getenv("DB_NAME")
+	if dbname == "" {
+		dbname = "biblioteca"
+	}
+
+	host := os.Getenv("DB_HOST")
+	if host == "" {
+		host = "localhost"
+	}
+
+	port := os.Getenv("DB_PORT")
+	if port == "" {
+		port = "5432"
+	}
+
+	sslmode := os.Getenv("DB_SSLMODE")
+	if sslmode == "" {
+		sslmode = "disable"
+	}
+
+	timezone := os.Getenv("DB_TIMEZONE")
+	if timezone == "" {
+		timezone = "UTC"
+	}
+
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=%s TimeZone=%s",
+		user, password, dbname, host, port, sslmode, timezone)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.New(
